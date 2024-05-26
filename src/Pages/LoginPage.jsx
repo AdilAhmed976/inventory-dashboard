@@ -12,8 +12,24 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
 
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = data => {
+    console.log(data);
+    if (data.email === 'example@gmail.com' && data.password === '12345678') {
+      localStorage.setItem('authenticated', 'true');
+    } else {
+      alert('Wrong Email / password');
+    }
+  };
+
   return (
     <Flex
       minH={'100vh'}
@@ -25,43 +41,64 @@ export default function Login() {
         <Stack align={'center'}>
           <Heading fontSize={'4xl'}>Sign in to your account</Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool <Link color={'blue.400'}>features</Link> ✌️
+            email: example@gmail.com , password : 12345678
           </Text>
         </Stack>
         <Box
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
           boxShadow={'lg'}
+          border={"1px solid lightgray"}
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: 'column', sm: 'row' }}
-                align={'start'}
-                justify={'space-between'}
-              >
-                <Checkbox>Remember me</Checkbox>
-                <Link color={'blue.400'}>Forgot password?</Link>
-              </Stack>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Box>
+                <Text sx={{ marginBottom: '10px' }} fontSize="2xl">
+                  Email
+                </Text>
+                <Input
+                  isInvalid={errors.email}
+                  errorBorderColor="red.600"
+                  marginBottom={'10px'}
+                  {...register('email', { required: true })}
+                />
+                <Box sx={{ height: '30px' }}>
+                  {errors.email && (
+                    <span style={{ color: 'red' }}>
+                      * This field is required
+                    </span>
+                  )}
+                </Box>
+              </Box>
+
+              <Box>
+                <Text sx={{ marginBottom: '10px' }} fontSize="2xl">
+                  Password
+                </Text>
+                <Input
+                  isInvalid={errors.password}
+                  errorBorderColor="red.600"
+                  marginBottom={'10px'}
+                  {...register('password', { required: true })}
+                />
+                <Box sx={{ height: '30px' }}>
+                  {errors.password && (
+                    <span style={{ color: 'red' }}>
+                      * This field is required
+                    </span>
+                  )}
+                </Box>
+              </Box>
               <Button
-                bg={'blue.400'}
-                color={'white'}
-                _hover={{
-                  bg: 'blue.500',
-                }}
+                type="submit"
+                width={'100%'}
+                colorScheme="teal"
+                variant="solid"
               >
-                Sign in
+                login
               </Button>
-            </Stack>
+            </form>
           </Stack>
         </Box>
       </Stack>
