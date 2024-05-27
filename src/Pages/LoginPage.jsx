@@ -13,6 +13,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const {
@@ -20,11 +21,13 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const onSubmit = data => {
     console.log(data);
     if (data.email === 'example@gmail.com' && data.password === '12345678') {
       localStorage.setItem('authenticated', 'true');
+      navigate('/');
     } else {
       alert('Wrong Email / password');
     }
@@ -48,7 +51,7 @@ export default function Login() {
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
           boxShadow={'lg'}
-          border={"1px solid lightgray"}
+          border={'1px solid lightgray'}
           p={8}
         >
           <Stack spacing={4}>
